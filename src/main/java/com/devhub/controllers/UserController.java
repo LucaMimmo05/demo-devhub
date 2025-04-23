@@ -1,13 +1,11 @@
 package com.devhub.controllers;
 
 import com.devhub.models.User;
-import com.devhub.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,5 +37,40 @@ public class UserController {
                 .entity(user)
                 .build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response updateUser(@PathParam("id") Long id, User user) {
+        User existingUser = User.findById(id);
+        if (existingUser == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        existingUser.username = user.username;
+        existingUser.email = user.email;
+        existingUser.password = user.password;
+
+
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Transactional
+    public Response deleteUser(@PathParam("id") Long id) {
+        boolean deleted = User.deleteById(id);
+        if (!deleted) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"message\":\"User not found\"}")
+                    .build();
+        }
+
+
+        return Response.ok().build();
+    }
+
 
 }
