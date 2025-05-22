@@ -1,6 +1,7 @@
 package com.devhub.controllers;
 
 import com.devhub.models.User;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ public class UserController {
 
     @GET
     @Transactional
+    @RolesAllowed("ADMIN")
     @Produces(MediaType.APPLICATION_JSON)
     public List<User> getAllUsers() {
         return User.listAll();

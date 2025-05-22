@@ -1,6 +1,5 @@
 package com.devhub.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -14,9 +13,15 @@ import java.util.List;
 public class User extends PanacheEntity {
 
 
+
+
     @JsonbProperty
-    @Column(name = "username", nullable = false)
-    public String username;
+    @Column(name = "name")
+    public String name;
+
+    @JsonbProperty
+    @Column(name = "surname")
+    public String surname;
 
     @JsonbProperty
     @Column(name = "email", nullable = false)
@@ -31,25 +36,48 @@ public class User extends PanacheEntity {
     @Column(name = "created_at")
     public LocalDateTime createdAt;
 
+    public String role;
 
-    public User(String username, String email, String password) {
-        this.username = username;
+
+    public User(String username,String name, String surname, String email, String password, String role) {
+        this.name = name;
+        this.surname = surname;
         this.email = email;
         this.password = password;
         this.createdAt = LocalDateTime.now();
+        this.role = role;
     }
 
     public User() {
     }
 
-    public String getUsername() {
-        return username;
+    public static User findByEmail(String email) {
+        return find("email", email).firstResult();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getRole() {
+        return role;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
 
     public String getEmail() {
         return email;
