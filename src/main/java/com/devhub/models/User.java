@@ -1,5 +1,6 @@
 package com.devhub.models;
 
+import com.devhub.models.role.Role;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -27,7 +28,6 @@ public class User extends PanacheEntity {
     @Column(name = "email", nullable = false)
     public String email;
 
-    @JsonbProperty
     @Column(name = "password", nullable = false)
     public String password;
 
@@ -36,10 +36,13 @@ public class User extends PanacheEntity {
     @Column(name = "created_at")
     public LocalDateTime createdAt;
 
-    public String role;
+
+    @Enumerated(EnumType.STRING)
+    @JsonbProperty
+    private Role role;
 
 
-    public User(String username,String name, String surname, String email, String password, String role) {
+    public User(String name, String surname, String email, String password, Role role) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -55,11 +58,11 @@ public class User extends PanacheEntity {
         return find("email", email).firstResult();
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

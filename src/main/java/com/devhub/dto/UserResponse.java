@@ -1,13 +1,15 @@
 package com.devhub.dto;
 
+import com.devhub.models.role.Role;
+
 public class UserResponse {
     private Long id;
     private String email;
     private String name;
     private String surname;
-    private String role;
+    private Role role;
 
-    public UserResponse(Long id, String email, String name, String surname, String role) {
+    public UserResponse(Long id, String email, String name, String surname, Role role) {
         this.id = id;
         this.email = email;
         this.name = name;
@@ -31,7 +33,7 @@ public class UserResponse {
         return surname;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 }

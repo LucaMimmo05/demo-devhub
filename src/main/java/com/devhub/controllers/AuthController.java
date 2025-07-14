@@ -1,88 +1,79 @@
 package com.devhub.controllers;
 
-import jakarta.inject.Inject;
+import com.devhub.dto.*;
+import com.devhub.models.role.Role;
+import com.devhub.services.UserService;
 
 
-import com.devhub.dto.LoginRequest;
-import com.devhub.dto.LoginResponse;
 import com.devhub.models.User;
 import com.devhub.services.JwtService;
-import com.devhub.dto.UserResponse;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.POST;
-import com.devhub.dto.RegisterRequest;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
-import org.mindrot.jbcrypt.BCrypt;
 
-@Path("/auth")
+@Path("api/auth")
 public class AuthController {
-    @Inject
     JwtService jwtService;
+    UserService userService;
+
+    public AuthController(JwtService jwtService, UserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
 
     @POST
     @Path("/login")
     @Transactional
     public Response login(LoginRequest request) {
-        User user = User.findByEmail(request.email);
+        LoginResponse response = userService.authenticateAndGenerateToken(request);
 
-        if (user == null) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(new LoginResponse("User not found")).build();
-        }
-
-        if (!BCrypt.checkpw(request.password, user.password)) {
-            return Response.status(Response.Status.UNAUTHORIZED)
-                    .entity(new LoginResponse("Invalid password")).build();
-        }
-
-        UserResponse userResponse = new UserResponse(
-                user.id,
-                user.email,
-                user.role,
-                user.name,
-                user.surname
-        );
-
-        String accessToken = jwtService.generateAccessToken(userResponse);
-        String refreshToken = jwtService.generateRefreshToken(userResponse);
-
-
-        return Response.ok(new LoginResponse("Login successful", accessToken,refreshToken)).build();
+        return Response.ok(response).build();
     }
     @POST
     @Path("/register")
-    @Transactional
     public Response register(RegisterRequest request) {
-        User existingUser = User.findByEmail(request.email);
-        if (existingUser != null) {
+        if (userService.checkExistingUser(request)) {
             return Response.status(Response.Status.CONFLICT)
                     .entity(new LoginResponse("User already exists"))
                     .build();
         }
 
-        String hashedPassword = BCrypt.hashpw(request.password, BCrypt.gensalt());
+        LoginResponse response = userService.registerAndGenerateToken(request);
 
-        User newUser = new User();
-        newUser.email = request.email;
-        newUser.password = hashedPassword;
-        newUser.name = request.name;
-        newUser.surname = request.surname;
-        newUser.role = request.role != null ? request.role : "user";
-
-        newUser.persist();
-
-        UserResponse userResponse = new UserResponse(
-                newUser.id,
-                newUser.email,
-                newUser.role,
-                newUser.name,
-                newUser.surname
-        );
-
-        String accessToken = jwtService.generateAccessToken(userResponse);
-        String refreshToken = jwtService.generateRefreshToken(userResponse);
-
-        return Response.ok(new LoginResponse("Registration successful", accessToken, refreshToken)).build();
+        return Response.ok(response).build();
     }
+    @POST
+    @Path("/refresh")
+    public Response refreshToken(RefreshTokenRequest request) {
+        LoginResponse response = userService.refreshTokens(request.getRefreshToken());
+        return Response.ok(response).build();
+    }
+
+    @POST
+    @Path("/verify")
+    public Response verifyToken(RefreshTokenRequest request) {
+        String token = request.getRefreshToken();
+        if (token == null || token.isEmpty()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Token is required")
+                    .build();
+        }
+
+        try {
+            LoginResponse response = jwtService.verifyToken(token);
+            return Response.ok(response).build();
+        } catch (WebApplicationException e) {
+            return Response.status(e.getResponse().getStatus())
+                    .entity(e.getMessage())
+                    .build();
+        }
+    }
+
+
+
+
+
+
 }
