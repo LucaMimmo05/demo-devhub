@@ -9,6 +9,8 @@ import com.devhub.models.role.Role;
 import com.devhub.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -66,6 +68,19 @@ public class UserService {
     }
 
     private User createUser(RegisterRequest request, String hashedPassword) {
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new BadRequestException("Email is required");
+        }
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new BadRequestException("Password is required");
+        }
+        if (request.getName() == null || request.getName().isBlank()) {
+            throw new BadRequestException("Name is required");
+        }
+        if (request.getSurname() == null || request.getSurname().isBlank()) {
+            throw new BadRequestException("Surname is required");
+        }
+
         User newUser = new User();
         newUser.setEmail(request.getEmail());
         newUser.setName(request.getName());
@@ -107,6 +122,22 @@ public class UserService {
         String newRefreshToken = jwtService.generateRefreshToken(userResponse);
 
         return new LoginResponse("Token refreshed", newAccessToken, newRefreshToken);
+    }
+
+    public UserResponse getUserById(Long userId) {
+        User user = userRepository.findUserById(userId);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        // Conversione da User a UserResponse
+        return new UserResponse(
+                user.id,
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getRole()
+        );
     }
 
 }

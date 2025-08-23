@@ -14,6 +14,10 @@ public class UserRepository {
         return User.findByEmail(email);
     }
 
+    public User findUserById(Long userId) {
+        return User.findById(userId);
+    }
+
     public User checkExistingUser(RegisterRequest request) {
         return User.findByEmail(request.getEmail());
     }

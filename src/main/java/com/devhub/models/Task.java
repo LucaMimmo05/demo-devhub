@@ -1,6 +1,8 @@
 package com.devhub.models;
 
 import com.devhub.dto.TaskResponse;
+import com.devhub.models.task.TaskPriority;
+import com.devhub.models.task.TaskStatus;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -22,12 +24,14 @@ public class Task extends PanacheEntity {
     private String description;
 
     @JsonbProperty
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private String status;
+    private TaskStatus status;
 
     @JsonbProperty
+    @Enumerated(EnumType.STRING)
     @Column(name = "priority")
-    private String priority;
+    private TaskPriority priority;
 
     @JsonbProperty
     @JsonbDateFormat("yyyy-MM-dd")
@@ -50,7 +54,7 @@ public class Task extends PanacheEntity {
 
     public Task() {}
 
-    public Task(String title, String description, String status, String priority,
+    public Task(String title, String description, TaskStatus status, TaskPriority priority,
                 LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.title = title;
         this.description = description;
@@ -68,10 +72,10 @@ public class Task extends PanacheEntity {
     public void setTitle(String title) { this.title = title; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
-    public String getPriority() { return priority; }
-    public void setPriority(String priority) { this.priority = priority; }
+    public TaskStatus getStatus() { return status; }
+    public void setStatus(TaskStatus status) { this.status = status; }
+    public TaskPriority getPriority() { return priority; }
+    public void setPriority(TaskPriority priority) { this.priority = priority; }
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
     public LocalDateTime getCreatedAt() { return createdAt; }

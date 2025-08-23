@@ -17,11 +17,11 @@ public class User extends PanacheEntity {
 
 
     @JsonbProperty
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     public String name;
 
     @JsonbProperty
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false)
     public String surname;
 
     @JsonbProperty
