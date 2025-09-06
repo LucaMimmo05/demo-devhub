@@ -11,7 +11,6 @@ public class TaskRequest {
     private TaskStatus status;
     private TaskPriority priority;
     private LocalDate dueDate;
-    private Long userId; // id utente a cui collegare la task
 
     // Getter e Setter
     public String getTitle() { return title; }
@@ -24,6 +23,4 @@ public class TaskRequest {
     public void setPriority(TaskPriority priority) { this.priority = priority; }
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
 }
