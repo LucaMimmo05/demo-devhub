@@ -79,7 +79,7 @@ public class JwtService {
                 .claim("email", user.getEmail())
                 .claim("name", user.getName())
                 .claim("surname", user.getSurname())
-                .expiresIn(Duration.ofHours(1))
+                .expiresIn(Duration.ofDays(7))
                 .issuedAt(Instant.now())
                 .sign();
     }
