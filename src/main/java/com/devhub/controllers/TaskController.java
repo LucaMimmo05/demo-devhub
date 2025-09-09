@@ -10,6 +10,7 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.SecurityContext;
 import net.bytebuddy.asm.MemberSubstitution;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 @Path("api/task")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Authenticated
 public class TaskController {
 

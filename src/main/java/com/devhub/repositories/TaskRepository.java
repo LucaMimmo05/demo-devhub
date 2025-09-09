@@ -11,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.WebApplicationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,9 +33,12 @@ public class TaskRepository {
         task.setDescription(request.getDescription());
         task.setStatus(TaskStatus.valueOf(request.getStatus().name()));
         task.setPriority(TaskPriority.valueOf(request.getPriority().name()));
+        User user = User.findById(userId);
 
-
-        task.setUser(User.findById(userId));
+        if (user == null) {
+            throw new WebApplicationException("User not found", 404);
+        }
+        task.setUser(user);
 
         task.persist();
         return task.toDTO();
@@ -59,6 +63,8 @@ public class TaskRepository {
         existingTask.setPriority(task.getPriority());
         existingTask.setDueDate(task.getDueDate());
         existingTask.setUpdatedAt(LocalDateTime.now());
+
+        existingTask.persist();
 
         return existingTask.toDTO();
     }
