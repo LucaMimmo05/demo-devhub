@@ -23,6 +23,14 @@ public class CommandRepository {
                 .map(c      -> ((Command) c).toDTO())
                 .collect(Collectors.toList());
     }
+
+    public CommandResponse getRandomCommand() {
+        Command command = Command.find("ORDER BY RANDOM()").firstResult();
+        if (command == null) {
+            throw new NotFoundException("No commands found");
+        }
+        return command.toDTO();
+    }
     @Transactional
     public CommandResponse createCommand(CommandRequest request, Long userId) {
         User user = User.findById(userId);

@@ -20,6 +20,10 @@ public class CommandService {
         return commandRepository.getCommandByUserId(userId);
     }
 
+    public CommandResponse getRandomCommand() {
+        return commandRepository.getRandomCommand();
+    }
+
     public CommandResponse createCommand(CommandRequest command, Long userId) {
         return commandRepository.createCommand(command , userId);
     }
