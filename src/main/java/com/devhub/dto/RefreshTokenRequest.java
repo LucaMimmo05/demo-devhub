@@ -1,6 +1,5 @@
 package com.devhub.dto;
 
-
 public class RefreshTokenRequest {
     private String refreshToken;
 

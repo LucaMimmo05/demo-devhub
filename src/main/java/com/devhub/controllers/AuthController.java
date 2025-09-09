@@ -12,6 +12,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @Path("api/auth")
 public class AuthController {
@@ -53,16 +54,16 @@ public class AuthController {
 
     @POST
     @Path("/verify")
-    public Response verifyToken(RefreshTokenRequest request) {
-        String token = request.getRefreshToken();
-        if (token == null || token.isEmpty()) {
+    public Response verifyToken(TokenRequest request) {
+        String token = request.getToken();
+        if (token == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Token is required")
                     .build();
         }
 
         try {
-            LoginResponse response = jwtService.verifyToken(token);
+            LoginResponse response = jwtService.verifyToken(token, "access-token");
             return Response.ok(response).build();
         } catch (WebApplicationException e) {
             return Response.status(e.getResponse().getStatus())

@@ -12,6 +12,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.mindrot.jbcrypt.BCrypt;
 
 @ApplicationScoped
@@ -36,14 +37,27 @@ public class UserService {
 
     public LoginResponse authenticateAndGenerateToken(LoginRequest request) {
         User user = findUser(request.getEmail());
-        if (user == null || !checkPassword(request.getPassword(), user.getPassword())) {
+
+        if (user == null) {
+            System.out.println("User not found for email: " + request.getEmail());
             throw new WebApplicationException("Invalid Credentials", 401);
         }
+
+        System.out.println("Login attempt for email: " + request.getEmail());
+        System.out.println("Input password: " + request.getPassword());
+        System.out.println("DB password: " + user.getPassword());
+        System.out.println("Password valid? " + checkPassword(request.getPassword(), user.getPassword()));
+
+        if (!checkPassword(request.getPassword(), user.getPassword())) {
+            throw new WebApplicationException("Invalid Credentials", 401);
+        }
+
         UserResponse userResponse = createResponse(user);
         String accessToken = jwtService.generateAccessToken(userResponse);
         String refreshToken = jwtService.generateRefreshToken(userResponse);
-        return new LoginResponse("Login successful", accessToken, refreshToken) ;
+        return new LoginResponse("Login successful", accessToken, refreshToken, userResponse);
     }
+
 
     public User findUser(String email) {
         return userRepository.findUserByEmail(email);
@@ -101,28 +115,29 @@ public class UserService {
     private UserResponse createResponse(User user) {
         return new UserResponse(
                 user.id,
+                user.getEmail(),
                 user.getName(),
                 user.getSurname(),
-                user.getEmail(),
                 user.getRole()
         );
     }
 
     public LoginResponse refreshTokens(String refreshToken) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
+        if (refreshToken == null) {
             throw new WebApplicationException("Refresh token is required", 400);
         }
 
-        UserResponse userResponse = jwtService.validateRefreshToken(refreshToken);
-        if (userResponse == null) {
-            throw new WebApplicationException("Invalid or expired refresh token", 401);
-        }
+        // Verifica il refresh token e ottieni l'utente
+        LoginResponse loginResponse = jwtService.verifyToken(refreshToken, "refresh-token");
+        UserResponse userResponse = loginResponse.getUser();
 
+        // Genera nuovi token
         String newAccessToken = jwtService.generateAccessToken(userResponse);
         String newRefreshToken = jwtService.generateRefreshToken(userResponse);
 
-        return new LoginResponse("Token refreshed", newAccessToken, newRefreshToken);
+        return new LoginResponse("Token refreshed", newAccessToken, newRefreshToken, userResponse);
     }
+
 
     public UserResponse getUserById(Long userId) {
         User user = userRepository.findUserById(userId);
@@ -133,9 +148,9 @@ public class UserService {
         // Conversione da User a UserResponse
         return new UserResponse(
                 user.id,
+                user.getEmail(),
                 user.getName(),
                 user.getSurname(),
-                user.getEmail(),
                 user.getRole()
         );
     }
