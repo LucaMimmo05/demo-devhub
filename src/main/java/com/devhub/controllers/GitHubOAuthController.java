@@ -58,7 +58,6 @@ public class GitHubOAuthController {
 
             HttpResponse<String> response = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("GitHub response: " + response.body());
 
             JsonObject json = new JsonObject(response.body());
             String accessToken = json.getString("access_token");

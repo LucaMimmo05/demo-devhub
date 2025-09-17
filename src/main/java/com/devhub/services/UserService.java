@@ -39,14 +39,9 @@ public class UserService {
         User user = findUser(request.getEmail());
 
         if (user == null) {
-            System.out.println("User not found for email: " + request.getEmail());
             throw new WebApplicationException("Invalid Credentials", 401);
         }
 
-        System.out.println("Login attempt for email: " + request.getEmail());
-        System.out.println("Input password: " + request.getPassword());
-        System.out.println("DB password: " + user.getPassword());
-        System.out.println("Password valid? " + checkPassword(request.getPassword(), user.getPassword()));
 
         if (!checkPassword(request.getPassword(), user.getPassword())) {
             throw new WebApplicationException("Invalid Credentials", 401);

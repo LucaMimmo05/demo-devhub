@@ -1,10 +1,8 @@
 package com.devhub.controllers;
 
 import com.devhub.models.GitHubToken;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import io.vertx.core.json.JsonArray;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -16,6 +14,15 @@ import java.util.Map;
 
 @Path("/github")
 public class GitHubAPIController {
+
+
+
+    @GET
+    @Produces
+    @Path("/{id}")
+    public GitHubToken getGitHubToken(@PathParam("id") Long userId) {
+        return GitHubToken.findByUserId(userId);
+    }
 
     @GET
     @Path("/repos/{userId}")
@@ -39,12 +46,25 @@ public class GitHubAPIController {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            return Response.ok(response.body()).build();
+
+            if (response.statusCode() == 200) {
+                JsonArray repos = new JsonArray(response.body());
+                return Response.ok(repos).build();
+            } else {
+                return Response.status(Response.Status.BAD_GATEWAY)
+                        .entity(Map.of(
+                                "error", "GitHub API error",
+                                "status", response.statusCode(),
+                                "body", response.body()
+                        ))
+                        .build();
+            }
 
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
+                    .entity(Map.of("error", e.getMessage() != null ? e.getMessage() : "Unknown error"))
                     .build();
         }
     }
+
 }
