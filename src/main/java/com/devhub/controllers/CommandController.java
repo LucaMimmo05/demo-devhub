@@ -71,9 +71,9 @@ public class CommandController {
 
         return Response.ok(Map.of("message", message)).build();
     }
-    @Path("/random")
+    @Path("/random/{id}")
     @GET
-    public CommandResponse getRandomCommand() {
-        return commandService.getRandomCommand();
+    public CommandResponse getRandomCommand(@PathParam("id") Long userId) {
+        return commandService.getRandomCommand(userId);
     }
 }

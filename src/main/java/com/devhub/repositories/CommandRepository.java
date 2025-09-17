@@ -24,8 +24,8 @@ public class CommandRepository {
                 .collect(Collectors.toList());
     }
 
-    public CommandResponse getRandomCommand() {
-        Command command = Command.find("ORDER BY RANDOM()").firstResult();
+    public CommandResponse getRandomCommand(Long userId) {
+        Command command = Command.find("user.id = ?1 ORDER BY RANDOM()", userId).firstResult();
         if (command == null) {
             throw new NotFoundException("No commands found");
         }
