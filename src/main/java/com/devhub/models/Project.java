@@ -1,11 +1,14 @@
 package com.devhub.models;
 
+import com.devhub.dto.CommandResponse;
+import com.devhub.dto.ProjectResponse;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "projects")
@@ -116,5 +119,24 @@ public class Project extends PanacheEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public ProjectResponse toDTO() {
+        ProjectResponse pr = new ProjectResponse();
+        pr.setName(this.name);
+        pr.setDescription(this.description);
+        pr.setProgress(this.progress);
+        pr.setPriority(this.priority);
+        pr.setTechnologies(this.technologies);
+        pr.setNotes(this.notes);
+
+        if (Objects.nonNull(this.user)) {
+            ProjectResponse.UserSummary us = new ProjectResponse.UserSummary();
+            us.setId(this.user.id);
+            us.setName(this.user.getName());
+            us.setEmail(this.user.getEmail());
+            pr.setUser(us);
+        }
+        return pr;
     }
 }
