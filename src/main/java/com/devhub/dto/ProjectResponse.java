@@ -1,25 +1,30 @@
 package com.devhub.dto;
 
+import com.devhub.models.project.FolderColor;
+import com.devhub.models.task.Status;
+
 public class ProjectResponse {
     public String name;
     public String description;
     public int progress;
-    public String priority;
+    public Status status;
     public String technologies;
     public String notes;
     public UserSummary user;
+    public FolderColor folderColor;
 
     public ProjectResponse() {
     }
 
-    public ProjectResponse(String name, String description, int progress, String priority, String technologies, String notes, UserSummary user) {
+    public ProjectResponse(String name, String description, int progress, Status status, String technologies, String notes, UserSummary user, FolderColor folderColor) {
         this.name = name;
         this.description = description;
         this.progress = progress;
-        this.priority = priority;
+        this.status = status;
         this.technologies = technologies;
         this.notes = notes;
         this.user = user;
+        this.folderColor = folderColor;
     }
 
     public String getName() {
@@ -46,12 +51,12 @@ public class ProjectResponse {
         this.progress = progress;
     }
 
-    public String getPriority() {
-        return priority;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getTechnologies() {
@@ -76,6 +81,13 @@ public class ProjectResponse {
 
     public void setUser(UserSummary user) {
         this.user = user;
+    }
+
+    public FolderColor getFolderColor() {
+        return folderColor;
+    }
+    public void setFolderColor(FolderColor folderColor) {
+        this.folderColor = folderColor;
     }
 
     public static class UserSummary {

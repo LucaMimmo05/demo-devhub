@@ -1,7 +1,7 @@
 package com.devhub.models.task;
 
 
-public enum TaskStatus {
+public enum Status {
     PENDING,
     IN_PROGRESS,
     DONE

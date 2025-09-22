@@ -1,7 +1,8 @@
 package com.devhub.models;
 
-import com.devhub.dto.CommandResponse;
 import com.devhub.dto.ProjectResponse;
+import com.devhub.models.project.FolderColor;
+import com.devhub.models.task.Status;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -30,9 +31,10 @@ public class Project extends PanacheEntity {
     @Column(name = "progress")
     public int progress;
 
+    @Enumerated(EnumType.STRING)
     @JsonbProperty
-    @Column(name = "priority")
-    public String priority;
+    @Column(name = "status")
+    public Status status;
 
     @JsonbProperty
     @Column(name = "technologies")
@@ -52,18 +54,28 @@ public class Project extends PanacheEntity {
     @Column(name = "updated_at")
     public LocalDateTime updatedAt;
 
+    @JsonbProperty
+    @Enumerated(EnumType.STRING)
+    @Column(name = "folder_color")
+    public FolderColor folderColor;
 
-    public Project(User user, String name, String description, int progress, String priority, String technologies, String notes) {
+
+
+    public Project(User user, String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor) {
         this.user = user;
         this.name = name;
         this.description = description;
         this.progress = progress;
-        this.priority = priority;
+        this.status = status;
         this.technologies = technologies;
         this.notes = notes;
+        this.folderColor = folderColor;
     }
 
-    public Project() {}
+    public Project() {
+    }
+
+
 
     public User getUser() {
         return user;
@@ -97,12 +109,12 @@ public class Project extends PanacheEntity {
         this.progress = progress;
     }
 
-    public String getPriority() {
-        return priority;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setPriority(String priority) {
-        this.priority = priority;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getTechnologies() {
@@ -121,14 +133,22 @@ public class Project extends PanacheEntity {
         this.notes = notes;
     }
 
+    public FolderColor getFolderColor() {
+        return folderColor;
+    }
+    public void setFolderColor(FolderColor folderColor) {
+        this.folderColor = folderColor;
+    }
+
     public ProjectResponse toDTO() {
         ProjectResponse pr = new ProjectResponse();
         pr.setName(this.name);
         pr.setDescription(this.description);
         pr.setProgress(this.progress);
-        pr.setPriority(this.priority);
+        pr.setStatus(this.status);
         pr.setTechnologies(this.technologies);
         pr.setNotes(this.notes);
+        pr.setFolderColor(this.folderColor);
 
         if (Objects.nonNull(this.user)) {
             ProjectResponse.UserSummary us = new ProjectResponse.UserSummary();

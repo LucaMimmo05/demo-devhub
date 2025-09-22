@@ -2,7 +2,7 @@ package com.devhub.models;
 
 import com.devhub.dto.TaskResponse;
 import com.devhub.models.task.TaskPriority;
-import com.devhub.models.task.TaskStatus;
+import com.devhub.models.task.Status;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.json.bind.annotation.JsonbDateFormat;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -26,7 +26,7 @@ public class Task extends PanacheEntity {
     @JsonbProperty
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private TaskStatus status;
+    private Status status;
 
     @JsonbProperty
     @Enumerated(EnumType.STRING)
@@ -54,7 +54,7 @@ public class Task extends PanacheEntity {
 
     public Task() {}
 
-    public Task(String title, String description, TaskStatus status, TaskPriority priority,
+    public Task(String title, String description, Status status, TaskPriority priority,
                 LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
         this.title = title;
         this.description = description;
@@ -72,8 +72,8 @@ public class Task extends PanacheEntity {
     public void setTitle(String title) { this.title = title; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    public TaskStatus getStatus() { return status; }
-    public void setStatus(TaskStatus status) { this.status = status; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
     public TaskPriority getPriority() { return priority; }
     public void setPriority(TaskPriority priority) { this.priority = priority; }
     public LocalDate getDueDate() { return dueDate; }

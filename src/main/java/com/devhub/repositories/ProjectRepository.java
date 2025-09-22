@@ -31,11 +31,12 @@ public class ProjectRepository {
         newProject.setName(project.getName());
         newProject.setDescription(project.getDescription());
         newProject.setProgress(project.getProgress());
-        newProject.setPriority(project.getPriority());
+        newProject.setStatus(project.getStatus());
         newProject.setTechnologies(project.getTechnologies());
         newProject.setNotes(project.getNotes());
         newProject.setUser(user);
         newProject.persistAndFlush();
+        newProject.setFolderColor(project.getFolderColor());
         return newProject.toDTO();
     }
 }

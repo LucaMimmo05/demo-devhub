@@ -6,7 +6,7 @@ import com.devhub.dto.UserResponse;
 import com.devhub.models.Task;
 import com.devhub.models.User;
 import com.devhub.models.task.TaskPriority;
-import com.devhub.models.task.TaskStatus;
+import com.devhub.models.task.Status;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.ForbiddenException;
@@ -31,7 +31,7 @@ public class TaskRepository {
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
-        task.setStatus(TaskStatus.valueOf(request.getStatus().name()));
+        task.setStatus(Status.valueOf(request.getStatus().name()));
         task.setPriority(TaskPriority.valueOf(request.getPriority().name()));
         User user = User.findById(userId);
 
