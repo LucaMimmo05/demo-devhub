@@ -2,8 +2,12 @@ package com.devhub.dto;
 
 import com.devhub.models.project.FolderColor;
 import com.devhub.models.task.Status;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.time.LocalDateTime;
 
 public class ProjectResponse {
+    public Long id;
     public String name;
     public String description;
     public int progress;
@@ -13,10 +17,17 @@ public class ProjectResponse {
     public UserSummary user;
     public FolderColor folderColor;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMMM dd yyyy, HH:mm:ss")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMMM dd yyyy, HH:mm:ss")
+    private LocalDateTime updatedAt;
+
     public ProjectResponse() {
     }
 
-    public ProjectResponse(String name, String description, int progress, Status status, String technologies, String notes, UserSummary user, FolderColor folderColor) {
+    public ProjectResponse(Long id,String name, String description, int progress, Status status, String technologies, String notes, UserSummary user, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.progress = progress;
@@ -25,6 +36,16 @@ public class ProjectResponse {
         this.notes = notes;
         this.user = user;
         this.folderColor = folderColor;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -88,6 +109,22 @@ public class ProjectResponse {
     }
     public void setFolderColor(FolderColor folderColor) {
         this.folderColor = folderColor;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public static class UserSummary {

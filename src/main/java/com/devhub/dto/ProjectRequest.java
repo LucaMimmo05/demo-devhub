@@ -3,6 +3,8 @@ package com.devhub.dto;
 import com.devhub.models.project.FolderColor;
 import com.devhub.models.task.Status;
 
+import java.time.LocalDateTime;
+
 public class ProjectRequest {
     public String name;
     public String description;
@@ -11,8 +13,10 @@ public class ProjectRequest {
     public String technologies;
     public String notes;
     public FolderColor folderColor;
+    public LocalDateTime createdAt;
+    public LocalDateTime updatedAt;
 
-    public ProjectRequest(String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor ) {
+    public ProjectRequest(String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.name = name;
         this.description = description;
         this.progress = progress;
@@ -20,6 +24,8 @@ public class ProjectRequest {
         this.technologies = technologies;
         this.notes = notes;
         this.folderColor = folderColor;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public ProjectRequest() {
@@ -79,5 +85,21 @@ public class ProjectRequest {
 
     public void setFolderColor(FolderColor folderColor) {
         this.folderColor = folderColor;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

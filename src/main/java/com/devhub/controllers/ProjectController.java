@@ -39,9 +39,39 @@ public class ProjectController {
         return projectService.getAllProjectByUserId(userId) ;
     }
 
+    @GET
+    @Path("/{projectId}")
+    public ProjectResponse getProjectById(@PathParam("projectId") Long projectId)
+    {
+        return projectService.getProjectById(projectId);
+    }
+
     @POST
     public ProjectResponse createProject(ProjectRequest project) {
         Long userId = getCurrentUserId();
         return projectService.createProject(project, userId);
+    }
+
+    @PUT
+    @Path("/{projectId}")
+    @Transactional
+    public Response updateProject(@PathParam("projectId") Long projectId, ProjectRequest project) {
+        Project existingProject = Project.findById(projectId);
+        if (existingProject == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Project not found").build();
+        }
+        if (!existingProject.user.id.equals(getCurrentUserId())) {
+            return Response.status(Response.Status.FORBIDDEN).entity("You are not allowed to update this project").build();
+        }
+        existingProject.setName(project.getName());
+        existingProject.setDescription(project.getDescription());
+        existingProject.setProgress(project.getProgress());
+        existingProject.setStatus(project.getStatus());
+        existingProject.setTechnologies(project.getTechnologies());
+        existingProject.setNotes(project.getNotes());
+        existingProject.setFolderColor(project.getFolderColor());
+        existingProject.setUpdatedAt(java.time.LocalDateTime.now());
+        existingProject.persistAndFlush();
+        return Response.ok(existingProject.toDTO()).build();
     }
 }

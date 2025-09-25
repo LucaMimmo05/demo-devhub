@@ -15,12 +15,12 @@ import java.util.Objects;
 @Table(name = "projects")
 public class Project extends PanacheEntity {
     @JsonbProperty
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
     public User user;
 
     @JsonbProperty
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     public String name;
 
     @JsonbProperty
@@ -28,12 +28,12 @@ public class Project extends PanacheEntity {
     public String description;
 
     @JsonbProperty
-    @Column(name = "progress")
+    @Column(name = "progress" , nullable = false)
     public int progress;
 
     @Enumerated(EnumType.STRING)
     @JsonbProperty
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     public Status status;
 
     @JsonbProperty
@@ -56,12 +56,12 @@ public class Project extends PanacheEntity {
 
     @JsonbProperty
     @Enumerated(EnumType.STRING)
-    @Column(name = "folder_color")
+    @Column(name = "folder_color", nullable = false)
     public FolderColor folderColor;
 
 
 
-    public Project(User user, String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor) {
+    public Project(User user, String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
         this.name = name;
         this.description = description;
@@ -70,6 +70,8 @@ public class Project extends PanacheEntity {
         this.technologies = technologies;
         this.notes = notes;
         this.folderColor = folderColor;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public Project() {
@@ -140,8 +142,22 @@ public class Project extends PanacheEntity {
         this.folderColor = folderColor;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public ProjectResponse toDTO() {
         ProjectResponse pr = new ProjectResponse();
+        pr.setId(this.id);
         pr.setName(this.name);
         pr.setDescription(this.description);
         pr.setProgress(this.progress);
@@ -149,6 +165,8 @@ public class Project extends PanacheEntity {
         pr.setTechnologies(this.technologies);
         pr.setNotes(this.notes);
         pr.setFolderColor(this.folderColor);
+        pr.setCreatedAt(this.createdAt);
+        pr.setUpdatedAt(this.updatedAt);
 
         if (Objects.nonNull(this.user)) {
             ProjectResponse.UserSummary us = new ProjectResponse.UserSummary();

@@ -7,6 +7,7 @@ import com.devhub.models.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,14 @@ public class ProjectRepository {
                 .stream()
                 .map((p) -> ((Project) p).toDTO())
                 .collect(Collectors.toList());
+    }
+
+    public ProjectResponse getProjectById(Long projectId) {
+        Project project = Project.findById(projectId);
+        if (project == null) {
+            throw new RuntimeException("Project not found");
+        }
+        return project.toDTO();
     }
     @Transactional
     public ProjectResponse createProject(ProjectRequest project, Long userId) {
@@ -35,8 +44,13 @@ public class ProjectRepository {
         newProject.setTechnologies(project.getTechnologies());
         newProject.setNotes(project.getNotes());
         newProject.setUser(user);
-        newProject.persistAndFlush();
         newProject.setFolderColor(project.getFolderColor());
+
+        LocalDateTime now = java.time.LocalDateTime.now();
+        newProject.setCreatedAt(now);
+        newProject.setUpdatedAt(now);
+
+        newProject.persistAndFlush();
         return newProject.toDTO();
     }
 }

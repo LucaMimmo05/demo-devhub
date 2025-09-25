@@ -1,9 +1,7 @@
 package com.devhub.dto;
 
 import com.devhub.dto.UserResponse;
-import jakarta.json.bind.annotation.JsonbPropertyOrder;
 
-@JsonbPropertyOrder({ "message", "accessToken", "refreshToken", "user" })
 public class LoginResponse {
     public String message;
     public String accessToken;

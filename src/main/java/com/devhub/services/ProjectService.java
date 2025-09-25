@@ -19,6 +19,10 @@ public class ProjectService {
         return projectRepository.getAllProjectByUserId(userId);
     }
 
+    public ProjectResponse getProjectById(Long projectId) {
+        return projectRepository.getProjectById(projectId);
+    }
+
     public ProjectResponse createProject(ProjectRequest project, Long userId) {
         return projectRepository.createProject(project, userId);
     }
