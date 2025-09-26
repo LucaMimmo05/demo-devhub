@@ -5,6 +5,7 @@ import com.devhub.models.task.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProjectResponse {
     public Long id;
@@ -12,7 +13,7 @@ public class ProjectResponse {
     public String description;
     public int progress;
     public Status status;
-    public String technologies;
+    public List<String> technologies;
     public String notes;
     public UserSummary user;
     public FolderColor folderColor;
@@ -26,7 +27,7 @@ public class ProjectResponse {
     public ProjectResponse() {
     }
 
-    public ProjectResponse(Long id,String name, String description, int progress, Status status, String technologies, String notes, UserSummary user, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProjectResponse(Long id,String name, String description, int progress, Status status, List<String> technologies, String notes, UserSummary user, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -80,11 +81,11 @@ public class ProjectResponse {
         this.status = status;
     }
 
-    public String getTechnologies() {
+    public List<String> getTechnologies() {
         return technologies;
     }
 
-    public void setTechnologies(String technologies) {
+    public void setTechnologies(List<String> technologies) {
         this.technologies = technologies;
     }
 

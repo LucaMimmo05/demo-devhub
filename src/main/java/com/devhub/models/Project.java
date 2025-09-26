@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.List;
+
 
 @Entity
 @Table(name = "projects")
@@ -38,7 +40,7 @@ public class Project extends PanacheEntity {
 
     @JsonbProperty
     @Column(name = "technologies")
-    public String technologies;
+    public List<String> technologies;
 
     @JsonbProperty
     @Column(name = "notes")
@@ -61,7 +63,7 @@ public class Project extends PanacheEntity {
 
 
 
-    public Project(User user, String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Project(User user, String name, String description, int progress, Status status, List<String> technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.user = user;
         this.name = name;
         this.description = description;
@@ -119,11 +121,11 @@ public class Project extends PanacheEntity {
         this.status = status;
     }
 
-    public String getTechnologies() {
+    public List<String> getTechnologies() {
         return technologies;
     }
 
-    public void setTechnologies(String technologies) {
+    public void setTechnologies(List<String> technologies) {
         this.technologies = technologies;
     }
 

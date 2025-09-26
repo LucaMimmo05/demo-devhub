@@ -4,19 +4,20 @@ import com.devhub.models.project.FolderColor;
 import com.devhub.models.task.Status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ProjectRequest {
     public String name;
     public String description;
     public int progress;
     public Status status;
-    public String technologies;
+    public List<String> technologies;
     public String notes;
     public FolderColor folderColor;
     public LocalDateTime createdAt;
     public LocalDateTime updatedAt;
 
-    public ProjectRequest(String name, String description, int progress, Status status, String technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ProjectRequest(String name, String description, int progress, Status status, List<String> technologies, String notes, FolderColor folderColor, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.name = name;
         this.description = description;
         this.progress = progress;
@@ -63,11 +64,11 @@ public class ProjectRequest {
         this.status = status;
     }
 
-    public String getTechnologies() {
+    public List<String> getTechnologies() {
         return technologies;
     }
 
-    public void setTechnologies(String technologies) {
+    public void setTechnologies(List<String> technologies) {
         this.technologies = technologies;
     }
 
