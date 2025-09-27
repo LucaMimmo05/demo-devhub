@@ -6,6 +6,8 @@ import com.devhub.models.Project;
 import com.devhub.models.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,5 +54,28 @@ public class ProjectRepository {
 
         newProject.persistAndFlush();
         return newProject.toDTO();
+    }
+
+    public ProjectResponse updateProject(Long projectId, ProjectRequest project, Long currentUserId) {
+        Project existingProject = Project.findById(projectId);
+
+        if (existingProject == null) {
+            throw new NotFoundException("Project not found");
+        }
+        if (!existingProject.user.id.equals(currentUserId)) {
+            throw new ForbiddenException("Forbidden");
+        }
+
+        existingProject.setName(project.getName());
+        existingProject.setDescription(project.getDescription());
+        existingProject.setProgress(project.getProgress());
+        existingProject.setStatus(project.getStatus());
+        existingProject.setTechnologies(project.getTechnologies());
+        existingProject.setNotes(project.getNotes());
+        existingProject.setFolderColor(project.getFolderColor());
+        existingProject.setUpdatedAt(java.time.LocalDateTime.now());
+        existingProject.persistAndFlush();
+
+        return existingProject.toDTO();
     }
 }

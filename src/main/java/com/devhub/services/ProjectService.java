@@ -6,6 +6,9 @@ import com.devhub.models.Project;
 import com.devhub.repositories.ProjectRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.ForbiddenException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
@@ -25,5 +28,9 @@ public class ProjectService {
 
     public ProjectResponse createProject(ProjectRequest project, Long userId) {
         return projectRepository.createProject(project, userId);
+    }
+
+    public ProjectResponse updateProject(Long projectId, ProjectRequest project, Long currentUserId) {
+        return projectRepository.updateProject(projectId, project, currentUserId);
     }
 }
