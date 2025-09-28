@@ -26,6 +26,13 @@ public class TaskRepository {
                 .map(t -> ((Task) t).toDTO())
                 .collect(Collectors.toList());
     }
+
+    public List<TaskResponse> getNotCompletedTasksByUserId(Long userId) {
+        return Task.list("user.id = ?1 and status != ?2", userId, Status.DONE)
+                .stream()
+                .map(t -> ((Task) t).toDTO())
+                .collect(Collectors.toList());
+    }
     @Transactional
     public TaskResponse createTask(TaskRequest request, Long userId) {
         Task task = new Task();
@@ -81,5 +88,22 @@ public class TaskRepository {
             throw new ForbiddenException("You are not allowed to delete this task");
         }
         existingTask.delete();
+    }
+
+    @Transactional
+    public TaskResponse completeTask(Long taskId, Long userId) {
+        Task existingTask = Task.findById(taskId);
+
+        if (existingTask == null) {
+            throw new NotFoundException("Task not found");
+        }
+        if (!existingTask.getUser().id.equals(userId)) {
+            throw new ForbiddenException("You are not allowed to complete this task");
+        }
+        existingTask.setStatus(Status.DONE);
+
+        existingTask.setUpdatedAt(LocalDateTime.now());
+        existingTask.persist();
+        return existingTask.toDTO();
     }
 }

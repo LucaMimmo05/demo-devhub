@@ -51,6 +51,12 @@ public class TaskController {
         Long currentUserId = getCurrentUserId();
         return taskService.getTasksByUserId(currentUserId);
     }
+    @Path("not-completed")
+    @GET
+    public List<TaskResponse> getNotCompletedTasks() {
+        Long currentUserId = getCurrentUserId();
+        return taskService.getNotCompletedTasksByUserId(currentUserId);
+    }
 
     // Crea una task per l'utente autenticato
     @POST
@@ -82,5 +88,12 @@ public class TaskController {
 
         String message = String.format("Task with id %d has been successfully deleted.", taskId);
         return Response.ok(Map.of("message", message)).build();
+    }
+
+    @Path("/{id}/complete")
+    @PUT
+    public TaskResponse completeTask(@PathParam("id") Long taskId) {
+        Long currentUserId = getCurrentUserId();
+        return taskService.completeTask(taskId, currentUserId);
     }
 }

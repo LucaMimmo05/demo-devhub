@@ -2,16 +2,12 @@ package com.devhub.services;
 
 import com.devhub.dto.TaskRequest;
 import com.devhub.dto.UserResponse;
-import com.devhub.models.Task;
 import com.devhub.repositories.TaskRepository;
 import com.devhub.dto.TaskResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class TaskService {
@@ -21,6 +17,10 @@ public class TaskService {
 
     public List<TaskResponse> getTasksByUserId(Long userId) {
         return taskRepository.getTasksByUserId(userId);
+    }
+
+    public List<TaskResponse> getNotCompletedTasksByUserId(Long userId) {
+        return taskRepository.getNotCompletedTasksByUserId(userId);
     }
 
     public TaskResponse createTask(TaskRequest task, Long userId) {
@@ -34,6 +34,10 @@ public class TaskService {
 
     public void deleteTask(Long userId,Long taskId) {
         taskRepository.deleteTask(userId,taskId);
+    }
+
+    public TaskResponse completeTask(Long userId, Long taskId) {
+        return taskRepository.completeTask(userId, taskId);
     }
 
 
