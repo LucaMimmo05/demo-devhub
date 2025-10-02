@@ -33,6 +33,13 @@ public class TaskRepository {
                 .map(t -> ((Task) t).toDTO())
                 .collect(Collectors.toList());
     }
+
+    public List<TaskResponse> getAllCompletedTasksByUserId(Long userId) {
+        return Task.list("user.id = ?1 and status = ?2", userId, Status.DONE)
+                .stream()
+                .map(t -> ((Task) t).toDTO())
+                .collect(Collectors.toList());
+    }
     @Transactional
     public TaskResponse createTask(TaskRequest request, Long userId) {
         Task task = new Task();
@@ -40,6 +47,9 @@ public class TaskRepository {
         task.setDescription(request.getDescription());
         task.setStatus(Status.valueOf(request.getStatus().name()));
         task.setPriority(TaskPriority.valueOf(request.getPriority().name()));
+        task.setDueDate(request.getDueDate());
+        task.setCreatedAt(LocalDateTime.now());
+        task.setUpdatedAt(LocalDateTime.now());
         User user = User.findById(userId);
 
         if (user == null) {
@@ -84,7 +94,7 @@ public class TaskRepository {
         if (existingTask == null) {
             throw new NotFoundException("Task not found");
         }
-        if (!existingTask.id.equals(userId)) {
+        if (!existingTask.getUser().id.equals(userId)) {
             throw new ForbiddenException("You are not allowed to delete this task");
         }
         existingTask.delete();
@@ -101,9 +111,15 @@ public class TaskRepository {
             throw new ForbiddenException("You are not allowed to complete this task");
         }
         existingTask.setStatus(Status.DONE);
+        existingTask.setCompletedAt(LocalDateTime.now());
 
         existingTask.setUpdatedAt(LocalDateTime.now());
         existingTask.persist();
         return existingTask.toDTO();
     }
+    @Transactional
+    public void deleteOldCompletedTasks() {
+        Task.delete("status = ?1 AND completedAt <= ?2", Status.DONE, LocalDateTime.now().minusDays(30));
+    }
+
 }

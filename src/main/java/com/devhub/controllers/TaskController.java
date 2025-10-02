@@ -38,47 +38,49 @@ public class TaskController {
     Instance<JsonWebToken> jwtInstance;
 
     public Long getCurrentUserId() {
-        JsonWebToken jwt = jwtInstance.get(); // prende il bean disponibile
+        JsonWebToken jwt = jwtInstance.get();
         return Long.valueOf(jwt.getSubject());
     }
 
 
 
 
-    // Recupera tutte le task dell'utente autenticato
     @GET
     public List<TaskResponse> getAllTasks() {
         Long currentUserId = getCurrentUserId();
         return taskService.getTasksByUserId(currentUserId);
     }
-    @Path("not-completed")
+    @Path("/not-completed")
     @GET
     public List<TaskResponse> getNotCompletedTasks() {
         Long currentUserId = getCurrentUserId();
         return taskService.getNotCompletedTasksByUserId(currentUserId);
     }
 
-    // Crea una task per l'utente autenticato
+    @Path("/completed")
+    @GET
+    public List<TaskResponse> getAllCompletedTasks() {
+        Long currentUserId = getCurrentUserId();
+        return taskService.getAllCompletedTasksByUserId(currentUserId);
+
+    }
+
     @POST
     public TaskResponse createTask(TaskRequest request) {
         Long currentUserId = getCurrentUserId();
         return taskService.createTask(request, currentUserId);
     }
 
-    // Aggiorna una task dell'utente autenticato
     @PUT
     @Path("/{id}")
     public TaskResponse updateTask(@PathParam("id") Long taskId,
                                    TaskRequest task) {
-        // Ottieni l'ID dell'utente dal JWT
         Long currentUserId = getCurrentUserId();
-        // Se vuoi più info, puoi recuperare dal DB o dal service
         UserResponse currentUser = userService.getUserById(currentUserId);
 
         return taskService.updateTask(taskId, task, currentUser);
     }
 
-    // Elimina una task dell'utente autenticato
     @DELETE
     @Path("/{id}")
     public Response deleteTask(

@@ -52,10 +52,13 @@ public class Task extends PanacheEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonbProperty
+    private LocalDateTime completedAt;
+
     public Task() {}
 
     public Task(String title, String description, Status status, TaskPriority priority,
-                LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, User user) {
+                LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt, User user, LocalDateTime completedAt) {
         this.title = title;
         this.description = description;
         this.status = status;
@@ -64,6 +67,7 @@ public class Task extends PanacheEntity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.user = user;
+        this.completedAt = completedAt;
     }
 
     // Getter & Setter
@@ -84,6 +88,8 @@ public class Task extends PanacheEntity {
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+    public LocalDateTime getCompletedAt() { return completedAt; }
+    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
 
     // Conversione in DTO
     public TaskResponse toDTO() {

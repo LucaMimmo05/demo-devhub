@@ -4,9 +4,11 @@ import com.devhub.dto.TaskRequest;
 import com.devhub.dto.UserResponse;
 import com.devhub.repositories.TaskRepository;
 import com.devhub.dto.TaskResponse;
+import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -21,6 +23,10 @@ public class TaskService {
 
     public List<TaskResponse> getNotCompletedTasksByUserId(Long userId) {
         return taskRepository.getNotCompletedTasksByUserId(userId);
+    }
+
+    public List<TaskResponse> getAllCompletedTasksByUserId(Long userId) {
+        return taskRepository.getAllCompletedTasksByUserId(userId);
     }
 
     public TaskResponse createTask(TaskRequest task, Long userId) {
@@ -39,6 +45,12 @@ public class TaskService {
     public TaskResponse completeTask(Long userId, Long taskId) {
         return taskRepository.completeTask(userId, taskId);
     }
+
+    @Scheduled(every="24h")
+    void deleteOldCompletedTasks() {
+        taskRepository.deleteOldCompletedTasks();
+    }
+
 
 
 
