@@ -19,4 +19,8 @@ public class GithubAPIService {
     public GithubUser getUserInfo(Long userId) {
         return githubAPIRepository.getUserInfo(userId);
     }
+
+    public JsonArray getUserRecentActivities(Long userId, int perPage) {
+        return githubAPIRepository.getUserRecentActivities(userId, perPage);
+    }
 }
