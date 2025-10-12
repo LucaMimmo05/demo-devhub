@@ -42,7 +42,7 @@ public class CommandController {
     @GET
     public List<CommandResponse> getAllCommands() {
         Long currentUserId = getCurrentUserId();
-        return commandService.getCommandsByUserId(currentUserId);
+        return commandService.getCommandsByUser(currentUserId);
     }
 
     @POST
@@ -54,11 +54,8 @@ public class CommandController {
     @PUT
     @Path("/{id}")
     public CommandResponse updateCommand(@PathParam("id") Long commandId, CommandRequest command) {
-        Long currentUserId = getCurrentUserId();
-
-        UserResponse currentUser = userService.getUserById(currentUserId);
-
-        return commandService.updateCommand(commandId, command, currentUser);
+        Long userId = getCurrentUserId();
+        return commandService.updateCommand(commandId, command, userId);
     }
 
     @DELETE
@@ -71,8 +68,8 @@ public class CommandController {
 
         return Response.ok(Map.of("message", message)).build();
     }
-    @Path("/random/{id}")
     @GET
+    @Path("/random/{id}")
     public CommandResponse getRandomCommand(@PathParam("id") Long userId) {
         return commandService.getRandomCommand(userId);
     }

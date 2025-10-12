@@ -8,10 +8,33 @@ import jakarta.persistence.Entity;
 public class GitHubToken extends PanacheEntity {
 
     @Column(nullable = false, unique = true)
-    public Long userId;
+    private Long userId;
 
     @Column(nullable = false, length = 512)
-    public String accessToken;
+    private String accessToken;
+
+    public GitHubToken(Long userId, String accessToken) {
+        this.userId = userId;
+        this.accessToken = accessToken;
+    }
+    public GitHubToken() {
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     public static GitHubToken findByUserId(Long userId) {
         return find("userId", userId).firstResult();

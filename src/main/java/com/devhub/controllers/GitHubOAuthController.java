@@ -72,9 +72,9 @@ public class GitHubOAuthController {
             GitHubToken token = GitHubToken.findByUserId(userId);
             if (token == null) {
                 token = new GitHubToken();
-                token.userId = userId;
+                token.setUserId(userId) ;
             }
-            token.accessToken = accessToken;
+            token.setAccessToken(accessToken);
             token.persist();
 
             // Risposta al frontend

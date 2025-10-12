@@ -31,7 +31,7 @@ public class GithubAPIRepository {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "token " + token.accessToken)
+                    .header("Authorization", "token " + token.getAccessToken())
                     .header("Accept", "application/json")
                     .GET()
                     .build();
@@ -59,7 +59,7 @@ public class GithubAPIRepository {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "token " + token.accessToken)
+                    .header("Authorization", "token " + token.getAccessToken())
                     .header("Accept", "application/json")
                     .GET()
                     .build();
@@ -90,7 +90,7 @@ public class GithubAPIRepository {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "token " + token.accessToken)
+                    .header("Authorization", "token " + token.getAccessToken())
                     .header("Accept", "application/json")
                     .GET()
                     .build();
@@ -121,7 +121,7 @@ public class GithubAPIRepository {
             String url = String.format(API_BASE_URL +"/users/"+ getGithubUsername(userId)+"/events?per_page=%d", perPage);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Authorization", "token " + token.accessToken)
+                    .header("Authorization", "token " + token.getAccessToken())
                     .header("Accept", "application/json")
                     .GET()
                     .build();

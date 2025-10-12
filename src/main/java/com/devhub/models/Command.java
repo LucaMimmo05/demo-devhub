@@ -15,24 +15,24 @@ import java.util.Objects;
 public class Command extends PanacheEntity {
     @JsonbProperty
     @Column(name = "title", nullable = false)
-    public String title;
+    private String title;
 
     @JsonbProperty
     @Column(name = "command_text", nullable = false)
-    public String commandText;
+    private String commandText;
 
     @JsonbProperty
     @Column(name = "description", nullable = false)
-    public String description;
+    private String description;
 
     @JsonbProperty
     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    public User user;
+    private User user;
 
     public Command() {
     }

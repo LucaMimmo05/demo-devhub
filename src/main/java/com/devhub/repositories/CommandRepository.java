@@ -1,47 +1,30 @@
 package com.devhub.repositories;
 
 import com.devhub.dto.CommandRequest;
-import com.devhub.dto.CommandResponse;
-import com.devhub.dto.UserResponse;
 import com.devhub.models.Command;
 import com.devhub.models.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-
 @ApplicationScoped
 public class CommandRepository {
 
-    public List<CommandResponse> getCommandByUserId(Long userId) {
-        return Command.list("user.id", userId)
-                .stream()
-                .map(c      -> ((Command) c).toDTO())
-                .collect(Collectors.toList());
+    public List<Command> findByUserId(Long userId) {
+        return Command.list("user.id", userId);
     }
 
-    public CommandResponse getRandomCommand(Long userId) {
-        Command command = Command.find("user.id = ?1 ORDER BY RANDOM()", userId).firstResult();
-        if (command == null) {
-            throw new NotFoundException("No commands found");
-        }
-        return command.toDTO();
+    public Command findRandomByUserId(Long userId) {
+        return Command.find("user.id = ?1 ORDER BY RANDOM()", userId).firstResult();
     }
+
+    public Command findById(Long commandId) {
+        return Command.findById(commandId);
+    }
+
     @Transactional
-    public CommandResponse createCommand(CommandRequest request, Long userId) {
-        User user = User.findById(userId);
-        if (user == null) {
-            throw new WebApplicationException("User not found", 404);
-        }
-
-        if (request.getTitle() == null || request.getTitle().isEmpty()) {
-            throw new WebApplicationException("Title cannot be empty", 400);
-        }
-
+    public Command create(CommandRequest request, User user) {
         Command command = new Command();
         command.setTitle(request.getTitle());
         command.setCommandText(request.getCommandText());
@@ -50,46 +33,29 @@ public class CommandRepository {
         command.setUser(user);
 
         command.persistAndFlush();
-        return command.toDTO();
+        return command;
+    }
+
+    @Transactional
+    public Command update(Command command, CommandRequest request) {
+        if (request.getTitle() != null) {
+            command.setTitle(request.getTitle());
+        }
+        if (request.getCommandText() != null) {
+            command.setCommandText(request.getCommandText());
+        }
+        if (request.getDescription() != null) {
+            command.setDescription(request.getDescription());
+        }
+        Command managed = Command.getEntityManager().merge(command);
+        Command.getEntityManager().flush();
+
+        return managed;
     }
 
 
     @Transactional
-    public CommandResponse updateCommand(Long commandId, CommandRequest command, UserResponse currentUser) {
-        Command existingCommand = Command.findById(commandId);
-
-        if (existingCommand == null) {
-            throw new NotFoundException("Command not found");
-        }
-
-        if(!existingCommand.user.id.equals(currentUser.getId())) {
-            throw new NotFoundException("You are not allowed to update this command");
-        }
-
-        existingCommand.setTitle(command.getTitle());
-        existingCommand.setCommandText(command.getCommandText());
-        existingCommand.setDescription(command.getDescription());
-
-        existingCommand.persist();
-
-        return existingCommand.toDTO();
+    public void delete(Command command) {
+        command.delete();
     }
-
-    @Transactional
-    public void deleteCommand(Long userId,Long commandId) {
-        Command existingCommand = Command.findById(commandId);
-
-        if (existingCommand == null) {
-            throw new NotFoundException("Command not found");
-        }
-
-        if(!existingCommand.user.id.equals(userId)) {
-            throw new NotFoundException("You are not allowed to delete this command");
-        }
-
-        existingCommand.delete();
-
-
-    }
-
 }

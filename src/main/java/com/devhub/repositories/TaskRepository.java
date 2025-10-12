@@ -2,46 +2,34 @@ package com.devhub.repositories;
 
 import com.devhub.dto.TaskRequest;
 import com.devhub.dto.TaskResponse;
-import com.devhub.dto.UserResponse;
 import com.devhub.models.Task;
 import com.devhub.models.User;
 import com.devhub.models.task.TaskPriority;
 import com.devhub.models.task.Status;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class TaskRepository {
 
-    public List<TaskResponse> getTasksByUserId(Long userId) {
-        return Task.list("user.id", userId)
-                .stream()
-                .map(t -> ((Task) t).toDTO())
-                .collect(Collectors.toList());
+    public List<Task> getTasksByUserId(Long userId) {
+        return Task.list("user.id", userId);
+    }
+    public Task findById(Long id) {
+        return Task.findById(id);
+    }
+    public List<Task> getNotCompletedTasksByUserId(Long userId) {
+        return Task.list("user.id = ?1 and status != ?2", userId, Status.DONE);
     }
 
-    public List<TaskResponse> getNotCompletedTasksByUserId(Long userId) {
-        return Task.list("user.id = ?1 and status != ?2", userId, Status.DONE)
-                .stream()
-                .map(t -> ((Task) t).toDTO())
-                .collect(Collectors.toList());
-    }
-
-    public List<TaskResponse> getAllCompletedTasksByUserId(Long userId) {
-        return Task.list("user.id = ?1 and status = ?2", userId, Status.DONE)
-                .stream()
-                .map(t -> ((Task) t).toDTO())
-                .collect(Collectors.toList());
+    public List<Task> getAllCompletedTasksByUserId(Long userId) {
+        return Task.list("user.id = ?1 and status = ?2", userId, Status.DONE);
     }
     @Transactional
-    public TaskResponse createTask(TaskRequest request, Long userId) {
+    public Task create(TaskRequest request, User user) {
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
@@ -50,72 +38,42 @@ public class TaskRepository {
         task.setDueDate(request.getDueDate());
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
-        User user = User.findById(userId);
-
-        if (user == null) {
-            throw new WebApplicationException("User not found", 404);
-        }
         task.setUser(user);
 
-        task.persist();
-        return task.toDTO();
+        task.persistAndFlush();
+        return task;
     }
 
     @Transactional
-    public TaskResponse updateTask(Long taskId, TaskRequest task, UserResponse currentUser) {
-        Task existingTask = Task.findById(taskId);
-
-        if (existingTask == null) {
-            throw new NotFoundException("Task not found");
+    public Task update(Task task, TaskRequest request) {
+        if (request.getTitle() != null) {
+            task.setTitle(request.getTitle());
+        }
+        if (request.getStatus() != null) {
+            task.setStatus(request.getStatus());
         }
 
-        // Controllo che la task appartenga all'utente loggato
-        if (!existingTask.getUser().id.equals(currentUser.getId())) {
-            throw new ForbiddenException("You are not allowed to update this task");
-        }
+        Task managed = Task.getEntityManager().merge(task);
+        Task.getEntityManager().flush();
 
-        existingTask.setTitle(task.getTitle());
-        existingTask.setDescription(task.getDescription());
-        existingTask.setStatus(task.getStatus());
-        existingTask.setPriority(task.getPriority());
-        existingTask.setDueDate(task.getDueDate());
-        existingTask.setUpdatedAt(LocalDateTime.now());
-
-        existingTask.persist();
-
-        return existingTask.toDTO();
+        return managed;
     }
 
 
     @Transactional
-    public void deleteTask(Long userId,Long taskId) {
-        Task existingTask = Task.findById(taskId);
-
-        if (existingTask == null) {
-            throw new NotFoundException("Task not found");
-        }
-        if (!existingTask.getUser().id.equals(userId)) {
-            throw new ForbiddenException("You are not allowed to delete this task");
-        }
-        existingTask.delete();
+    public void delete(Task task) {
+        task.delete();
     }
 
     @Transactional
-    public TaskResponse completeTask(Long taskId, Long userId) {
-        Task existingTask = Task.findById(taskId);
+    public TaskResponse complete(Task task) {
+        task.setStatus(Status.DONE);
+        task.setCompletedAt(LocalDateTime.now());
 
-        if (existingTask == null) {
-            throw new NotFoundException("Task not found");
-        }
-        if (!existingTask.getUser().id.equals(userId)) {
-            throw new ForbiddenException("You are not allowed to complete this task");
-        }
-        existingTask.setStatus(Status.DONE);
-        existingTask.setCompletedAt(LocalDateTime.now());
-
-        existingTask.setUpdatedAt(LocalDateTime.now());
-        existingTask.persist();
-        return existingTask.toDTO();
+        task.setUpdatedAt(LocalDateTime.now());
+        Task managed = Task.getEntityManager().merge(task);
+        Task.getEntityManager().flush();
+        return managed.toDTO();
     }
     @Transactional
     public void deleteOldCompletedTasks() {

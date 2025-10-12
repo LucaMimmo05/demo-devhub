@@ -18,23 +18,23 @@ public class User extends PanacheEntity {
 
     @JsonbProperty
     @Column(name = "name", nullable = false)
-    public String name;
+    private String name;
 
     @JsonbProperty
     @Column(name = "surname", nullable = false)
-    public String surname;
+    private String surname;
 
     @JsonbProperty
     @Column(name = "email", nullable = false)
-    public String email;
+    private String email;
 
     @Column(name = "password", nullable = false)
-    public String password;
+    private String password;
 
     @JsonbProperty
     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
 
     @Enumerated(EnumType.STRING)

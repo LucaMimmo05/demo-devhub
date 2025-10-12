@@ -2,7 +2,6 @@ package com.devhub.controllers;
 
 import com.devhub.dto.ProjectRequest;
 import com.devhub.dto.ProjectResponse;
-import com.devhub.models.Project;
 import com.devhub.services.ProjectService;
 import io.quarkus.security.Authenticated;
 import jakarta.enterprise.inject.Instance;
@@ -14,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import java.util.List;
+import java.util.Map;
 
 
 @Path("api/project")
@@ -40,8 +40,8 @@ public class ProjectController {
     }
 
     @GET
-    @Path("/{projectId}")
-    public ProjectResponse getProjectById(@PathParam("projectId") Long projectId)
+    @Path("/{id}")
+    public ProjectResponse getProjectById(@PathParam("id") Long projectId)
     {
         return projectService.getProjectById(projectId);
     }
@@ -53,10 +53,22 @@ public class ProjectController {
     }
 
     @PUT
-    @Path("/{projectId}")
+    @Path("/{id}")
     @Transactional
-    public ProjectResponse updateProject(@PathParam("projectId") Long projectId, ProjectRequest project) {
+    public ProjectResponse updateProject(@PathParam("id") Long projectId, ProjectRequest project) {
         Long userId = getCurrentUserId();
         return projectService.updateProject(projectId, project, userId);
     }
+
+    @DELETE
+    @Path("/{id}")
+    public Response deleteProject(@PathParam("id") Long projectId) {
+        Long userId = getCurrentUserId();
+        projectService.deleteProject(userId, projectId);
+        String message = "Project with ID " + projectId + " has been deleted.";
+
+        return Response.ok(Map.of("message", message)).build();
+    }
+
+
 }

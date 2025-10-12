@@ -76,9 +76,8 @@ public class TaskController {
     public TaskResponse updateTask(@PathParam("id") Long taskId,
                                    TaskRequest task) {
         Long currentUserId = getCurrentUserId();
-        UserResponse currentUser = userService.getUserById(currentUserId);
 
-        return taskService.updateTask(taskId, task, currentUser);
+        return taskService.updateTask(taskId, task, currentUserId);
     }
 
     @DELETE
@@ -96,6 +95,6 @@ public class TaskController {
     @PUT
     public TaskResponse completeTask(@PathParam("id") Long taskId) {
         Long currentUserId = getCurrentUserId();
-        return taskService.completeTask(taskId, currentUserId);
+        return taskService.completeTask(currentUserId, taskId);
     }
 }

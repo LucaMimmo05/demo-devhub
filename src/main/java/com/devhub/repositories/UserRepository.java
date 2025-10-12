@@ -19,8 +19,9 @@ public class UserRepository {
     }
 
     public User checkExistingUser(RegisterRequest request) {
-        return User.findByEmail(request.getEmail());
+        return findUserByEmail(request.getEmail());
     }
+
     @Transactional
     public void createUser(User newUser) {
         newUser.persist();

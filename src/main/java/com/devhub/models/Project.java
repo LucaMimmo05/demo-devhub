@@ -19,47 +19,47 @@ public class Project extends PanacheEntity {
     @JsonbProperty
     @JoinColumn(name = "user_id", nullable = false)
     @ManyToOne
-    public User user;
+    private User user;
 
     @JsonbProperty
     @Column(name = "name", nullable = false)
-    public String name;
+    private String name;
 
     @JsonbProperty
     @Column(name = "description")
-    public String description;
+    private String description;
 
     @JsonbProperty
     @Column(name = "progress" , nullable = false)
-    public int progress;
+    private int progress;
 
     @Enumerated(EnumType.STRING)
     @JsonbProperty
     @Column(name = "status", nullable = false)
-    public Status status;
+    private Status status;
 
     @JsonbProperty
     @Column(name = "technologies")
-    public List<String> technologies;
+    private List<String> technologies;
 
     @JsonbProperty
     @Column(name = "notes")
-    public String notes;
+    private String notes;
 
     @JsonbProperty
     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "created_at")
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @JsonbProperty
     @JsonbDateFormat("yyyy-MM-dd'T'HH:mm:ss")
     @Column(name = "updated_at")
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     @JsonbProperty
     @Enumerated(EnumType.STRING)
     @Column(name = "folder_color", nullable = false)
-    public FolderColor folderColor;
+    private FolderColor folderColor;
 
 
 
