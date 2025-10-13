@@ -1,28 +1,28 @@
 # 🚀 DevHub - Dashboard for Developers
 
-DevHub è una piattaforma completa per la gestione di progetti, task e comandi per sviluppatori. Permette di organizzare il lavoro, tenere traccia dei progressi e salvare comandi utili.
+DevHub is a complete platform for managing projects, tasks, and commands for developers. It helps you organize your work, track progress, and save useful commands.
 
-## 📋 Caratteristiche
+## 📋 Features
 
-- **Gestione Progetti**: Crea e monitora i tuoi progetti di sviluppo
-- **Task Management**: Organizza le attività con priorità, scadenze e stati
-- **Command Library**: Salva e recupera comandi utili
-- **Autenticazione JWT**: Sistema sicuro di login/registrazione con refresh token
-- **Integrazione GitHub OAuth**: (in sviluppo)
-- **API RESTful**: Architettura completa con endpoints documentati
+- **Project Management**: Create and monitor your development projects
+- **Task Management**: Organize activities with priorities, deadlines, and statuses
+- **Command Library**: Save and retrieve useful commands
+- **JWT Authentication**: Secure login/registration system with refresh token
+- **GitHub OAuth Integration**: (in development)
+- **RESTful API**: Full architecture with documented endpoints
 
-## 🛠️ Tecnologie
+## 🛠️ Technologies
 
 - **Framework**: Quarkus 3.21.3
 - **Java**: 21
 - **Database**: PostgreSQL
 - **ORM**: Hibernate ORM Panache
-- **Sicurezza**: JWT (JSON Web Tokens) con SmallRye JWT
+- **Security**: JWT (JSON Web Tokens) with SmallRye JWT
 - **Password Hashing**: BCrypt
 - **Build Tool**: Maven
 - **Testing**: JUnit 5, REST Assured
 
-## 📦 Dipendenze Principali
+## 📦 Main Dependencies
 
 - Quarkus REST (JAX-RS)
 - Quarkus Hibernate ORM Panache
@@ -31,22 +31,22 @@ DevHub è una piattaforma completa per la gestione di progetti, task e comandi p
 - JJWT (0.11.5)
 - BCrypt (0.4)
 
-## 🚀 Installazione e Avvio
+## 🚀 Installation and Setup
 
-### Prerequisiti
+### Prerequisites
 
-- Java 21 o superiore
+- Java 21 or higher
 - Maven 3.8+
 - PostgreSQL
 
-### Configurazione Database
+### Database Configuration
 
-1. Crea un database PostgreSQL:
+1. Create a PostgreSQL database:
 ```sql
 CREATE DATABASE devhub;
 ```
 
-2. Configura il file `src/main/resources/application.properties`:
+2. Configure the `src/main/resources/application.properties` file:
 ```properties
 quarkus.datasource.db-kind=postgresql
 quarkus.datasource.username=your_username
@@ -55,26 +55,26 @@ quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/devhub
 quarkus.hibernate-orm.database.generation=update
 ```
 
-### Avvio Applicazione
+### Starting the Application
 
-#### Modalità Development
+#### Development Mode
 ```bash
 ./mvnw quarkus:dev
 ```
 
-#### Build e Run
+#### Build and Run
 ```bash
 ./mvnw package
 java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-L'applicazione sarà disponibile su `http://localhost:8080`
+The application will be available at `http://localhost:8080`
 
 ## 📚 API Endpoints
 
-### 🔐 Autenticazione (`/api/auth`)
+### 🔐 Authentication (`/api/auth`)
 
-#### Registrazione
+#### Register
 ```http
 POST /api/auth/register
 Content-Type: application/json
@@ -97,7 +97,7 @@ Content-Type: application/json
 }
 ```
 
-**Risposta:**
+**Response:**
 ```json
 {
   "accessToken": "eyJhbGc...",
@@ -116,7 +116,7 @@ Content-Type: application/json
 }
 ```
 
-#### Verifica Token
+#### Verify Token
 ```http
 POST /api/auth/verify
 Content-Type: application/json
@@ -128,17 +128,17 @@ Content-Type: application/json
 
 ---
 
-### 📁 Progetti (`/api/project`)
+### 📁 Projects (`/api/project`)
 
-> ⚠️ Tutti gli endpoint richiedono autenticazione tramite header:
+> ⚠️ All endpoints require authentication via header:
 > `Authorization: Bearer {accessToken}`
 
-#### Ottieni tutti i progetti dell'utente
+#### Get all user projects
 ```http
 GET /api/project
 ```
 
-**Risposta:**
+**Response:**
 ```json
 [
   {
@@ -161,120 +161,120 @@ GET /api/project
 ]
 ```
 
-#### Ottieni progetto per ID
+#### Get project by ID
 ```http
 GET /api/project/{id}
 ```
 
-#### Crea nuovo progetto
+#### Create new project
 ```http
 POST /api/project
 Content-Type: application/json
 
 {
-  "name": "Nuovo Progetto",
-  "description": "Descrizione del progetto",
+  "name": "New Project",
+  "description": "Project description",
   "status": "NOT_STARTED",
   "progress": 0,
   "technologies": ["Java", "React"],
-  "notes": "Note varie",
+  "notes": "Various notes",
   "folderColor": "BLUE"
 }
 ```
 
-#### Aggiorna progetto
+#### Update project
 ```http
 PUT /api/project/{id}
 Content-Type: application/json
 
 {
-  "name": "Progetto Aggiornato",
+  "name": "Updated Project",
   "progress": 50,
   "status": "IN_PROGRESS"
 }
 ```
 
-#### Elimina progetto
+#### Delete project
 ```http
 DELETE /api/project/{id}
 ```
 
 ---
 
-### ✅ Task (`/api/task`)
+### ✅ Tasks (`/api/task`)
 
-> ⚠️ Richiede autenticazione
+> ⚠️ Requires authentication
 
-#### Ottieni tutti i task
+#### Get all tasks
 ```http
 GET /api/task
 ```
 
-#### Ottieni task non completati
+#### Get not completed tasks
 ```http
 GET /api/task/not-completed
 ```
 
-#### Ottieni task completati
+#### Get completed tasks
 ```http
 GET /api/task/completed
 ```
 
-#### Crea nuovo task
+#### Create new task
 ```http
 POST /api/task
 Content-Type: application/json
 
 {
-  "title": "Implementare autenticazione",
-  "description": "Aggiungere JWT auth",
+  "title": "Implement authentication",
+  "description": "Add JWT auth",
   "status": "NOT_STARTED",
   "priority": "HIGH",
   "dueDate": "2025-01-20"
 }
 ```
 
-**Priorità disponibili:** `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`  
-**Stati disponibili:** `NOT_STARTED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`
+**Available priorities:** `LOW`, `MEDIUM`, `HIGH`, `CRITICAL`  
+**Available statuses:** `NOT_STARTED`, `IN_PROGRESS`, `COMPLETED`, `CANCELLED`
 
-#### Aggiorna task
+#### Update task
 ```http
 PUT /api/task/{id}
 Content-Type: application/json
 
 {
-  "title": "Task aggiornato",
+  "title": "Updated task",
   "status": "IN_PROGRESS"
 }
 ```
 
-#### Completa task
+#### Complete task
 ```http
 PUT /api/task/{id}/complete
 ```
 
-#### Elimina task
+#### Delete task
 ```http
 DELETE /api/task/{id}
 ```
 
 ---
 
-### 💻 Comandi (`/api/command`)
+### 💻 Commands (`/api/command`)
 
-> ⚠️ Richiede autenticazione
+> ⚠️ Requires authentication
 
-#### Ottieni tutti i comandi
+#### Get all commands
 ```http
 GET /api/command
 ```
 
-#### Ottieni comando random
+#### Get random command
 ```http
 GET /api/command/random/{userId}
 ```
 
-#### Crea nuovo comando
+#### Create new command
 ```http
 POST /api/command
 Content-Type: application/json
@@ -286,36 +286,36 @@ Content-Type: application/json
 }
 ```
 
-#### Aggiorna comando
+#### Update command
 ```http
 PUT /api/command/{id}
 Content-Type: application/json
 
 {
-  "title": "Docker build aggiornato",
+  "title": "Updated Docker build",
   "commandText": "docker build -t myapp:latest ."
 }
 ```
 
-#### Elimina comando
+#### Delete command
 ```http
 DELETE /api/command/{id}
 ```
 
 ---
 
-### 👤 Utenti (`/api/user`)
+### 👤 Users (`/api/user`)
 
-> ⚠️ Richiede autenticazione
+> ⚠️ Requires authentication
 
-#### Ottieni informazioni utente corrente
+#### Get current user info
 ```http
 GET /api/user/me
 ```
 
 ---
 
-## 🗄️ Modelli Dati
+## 🗄️ Data Models
 
 ### Project
 - `id`: Long
@@ -328,7 +328,7 @@ GET /api/user/me
 - `folderColor`: Enum (RED, BLUE, GREEN, YELLOW, PURPLE, etc.)
 - `createdAt`: LocalDateTime
 - `updatedAt`: LocalDateTime
-- `user`: User (relazione Many-to-One)
+- `user`: User (Many-to-One relationship)
 
 ### Task
 - `id`: Long
@@ -339,7 +339,7 @@ GET /api/user/me
 - `dueDate`: LocalDate
 - `createdAt`: LocalDateTime
 - `updatedAt`: LocalDateTime
-- `user`: User (relazione Many-to-One)
+- `user`: User (Many-to-One relationship)
 
 ### Command
 - `id`: Long
@@ -347,7 +347,7 @@ GET /api/user/me
 - `commandText`: String (required)
 - `description`: String
 - `createdAt`: LocalDateTime
-- `user`: User (relazione Many-to-One)
+- `user`: User (Many-to-One relationship)
 
 ### User
 - `id`: Long
@@ -357,51 +357,51 @@ GET /api/user/me
 - `role`: Enum (USER, ADMIN)
 - `createdAt`: LocalDateTime
 
-## 🔒 Sicurezza
+## 🔒 Security
 
-- Le password sono hashate con BCrypt
-- Autenticazione basata su JWT (Access Token + Refresh Token)
-- Access Token: durata breve (es. 15 minuti)
-- Refresh Token: durata estesa (es. 7 giorni)
-- Chiavi RSA per firma JWT (private/public key)
-- Protezione degli endpoint tramite `@Authenticated`
+- Passwords are hashed with BCrypt
+- JWT-based authentication (Access Token + Refresh Token)
+- Access Token: short duration (e.g., 15 minutes)
+- Refresh Token: extended duration (e.g., 7 days)
+- RSA keys for JWT signing (private/public key)
+- Endpoint protection via `@Authenticated`
 
 ## 🧪 Testing
 
-Esegui i test:
+Run tests:
 ```bash
 ./mvnw test
 ```
 
-## 📝 Note
+## 📝 Notes
 
-- Il progetto utilizza Quarkus come framework, ottimizzato per il cloud e container
-- Supporto per build native con GraalVM
-- Configurazione disponibile in `application.properties`
-- Chiavi JWT in `META-INF/privateKey.pem` e `META-INF/publicKey.pem`
+- The project uses Quarkus as the framework, optimized for cloud and containers
+- Native build support with GraalVM
+- Configuration available in `application.properties`
+- JWT keys in `META-INF/privateKey.pem` and `META-INF/publicKey.pem`
 
-## 🐛 Issues Noti
+## 🐛 Known Issues
 
-1. ~~**getRandomCommand**: Il metodo per cercare un comando random non funziona correttamente~~ (da verificare implementazione nel CommandService)
-2. ~~**Project API**: I campi `createdAt` e `updatedAt` non vengono visualizzati nella risposta JSON~~ (verificare mapping DTO)
+1. ~~**getRandomCommand**: The method for searching a random command does not work correctly~~ (check implementation in CommandService)
+2. ~~**Project API**: The fields `createdAt` and `updatedAt` are not shown in the JSON response~~ (verify DTO mapping)
 
-## 🚧 In Sviluppo
+## 🚧 In Development
 
-- [ ] Integrazione completa GitHub OAuth
+- [ ] Full GitHub OAuth integration
 - [ ] GitHub API Controller
-- [ ] Miglioramenti UI/UX
-- [ ] Sistema di notifiche
-- [ ] Export/Import progetti
+- [ ] UI/UX improvements
+- [ ] Notification system
+- [ ] Project export/import
 
-## 👨‍💻 Autore
+## 👨‍💻 Author
 
-Sviluppato da Luca
+Developed by Luca
 
-## 📄 Licenza
+## 📄 License
 
-Questo progetto è privato e non ha una licenza open source.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-**Versione**: 1.0-SNAPSHOT  
-**Ultima modifica**: Ottobre 2025
+**Version**: 1.0-SNAPSHOT  
+**Last Updated**: January 2025
