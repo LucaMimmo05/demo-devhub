@@ -22,9 +22,7 @@ import java.util.List;
 @ApplicationScoped
 public class JwtService {
 
-    // =========================
-    // GENERAZIONE TOKEN
-    // =========================
+
 
     public String generateAccessToken(UserResponse user) {
         return Jwt.issuer("demo-devhub")
@@ -54,9 +52,6 @@ public class JwtService {
                 .sign();
     }
 
-    // =========================
-    // VERIFICA TOKEN
-    // =========================
 
     public LoginResponse verifyToken(String jwtString, String requiredGroup) {
         if (jwtString == null || jwtString.isEmpty()) {
@@ -64,7 +59,6 @@ public class JwtService {
         }
 
         try {
-            // Parse del token usando JwtConsumer
             JwtConsumer jwtConsumer = new JwtConsumerBuilder()
                     .setSkipAllValidators()
                     .setDisableRequireSignature()
@@ -73,20 +67,17 @@ public class JwtService {
 
             JwtClaims claims = jwtConsumer.processToClaims(jwtString);
 
-            // Controllo gruppo
             List<String> groupsList = claims.getStringListClaimValue("groups");
             Set<String> groups = new HashSet<>(groupsList != null ? groupsList : List.of());
             if (!groups.contains(requiredGroup)) {
                 throw new WebApplicationException("Token missing required group", 401);
             }
 
-            // Controllo scadenza
-            Long exp = claims.getExpirationTime().getValue(); // epoch seconds
+            Long exp = claims.getExpirationTime().getValue();
             if (exp != null && Instant.ofEpochSecond(exp).isBefore(Instant.now())) {
                 throw new WebApplicationException("Token expired", 401);
             }
 
-            // Costruzione UserResponse
             UserResponse user = new UserResponse(
                     Long.valueOf(claims.getSubject()),
                     (String) claims.getClaimValue("email"),

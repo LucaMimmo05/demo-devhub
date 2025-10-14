@@ -13,9 +13,6 @@ import java.util.List;
 @Table(name = "users")
 public class User extends PanacheEntity {
 
-
-
-
     @JsonbProperty
     @Column(name = "name", nullable = false)
     private String name;
@@ -25,7 +22,7 @@ public class User extends PanacheEntity {
     private String surname;
 
     @JsonbProperty
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @Column(name = "password", nullable = false)

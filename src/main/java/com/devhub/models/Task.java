@@ -70,8 +70,7 @@ public class Task extends PanacheEntity {
         this.completedAt = completedAt;
     }
 
-    // Getter & Setter
-    public Long getId() { return id; } // ereditato da PanacheEntity, aggiungiamo getter per coerenza
+    public Long getId() { return id; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public String getDescription() { return description; }
@@ -91,7 +90,6 @@ public class Task extends PanacheEntity {
     public LocalDateTime getCompletedAt() { return completedAt; }
     public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
 
-    // Conversione in DTO
     public TaskResponse toDTO() {
         TaskResponse tr = new TaskResponse();
         tr.setId(this.id);

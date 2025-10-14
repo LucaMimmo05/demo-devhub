@@ -22,8 +22,6 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommandController {
 
-    @Inject
-    UserService userService;
     private final CommandService commandService;
 
     public CommandController(CommandService commandService) {
@@ -69,8 +67,9 @@ public class CommandController {
         return Response.ok(Map.of("message", message)).build();
     }
     @GET
-    @Path("/random/{id}")
-    public CommandResponse getRandomCommand(@PathParam("id") Long userId) {
+    @Path("/random")
+    public CommandResponse getRandomCommand() {
+        Long userId = getCurrentUserId();
         return commandService.getRandomCommand(userId);
     }
 }
