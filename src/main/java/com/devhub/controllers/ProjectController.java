@@ -29,7 +29,7 @@ public class ProjectController {
     Instance<JsonWebToken> jwtInstance;
 
     public Long getCurrentUserId() {
-        JsonWebToken jwt = jwtInstance.get(); // prende il bean disponibile
+        JsonWebToken jwt = jwtInstance.get();
         return Long.valueOf(jwt.getSubject());
     }
 

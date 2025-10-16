@@ -40,7 +40,7 @@ public class ProjectRepository {
         return newProject;
     }
     @Transactional
-    public Project update(Project project, ProjectRequest request, Long userId) {
+    public Project update(Project project, ProjectRequest request) {
         if (request.getName() != null) {
             project.setName(request.getName());
         }

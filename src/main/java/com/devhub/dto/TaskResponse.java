@@ -40,7 +40,6 @@ public class TaskResponse {
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
     public void setUser(UserSummary user) { this.user = user; }
 
-    // Inner class per utente ridotto
     public static class UserSummary {
         private Long id;
         private String name;

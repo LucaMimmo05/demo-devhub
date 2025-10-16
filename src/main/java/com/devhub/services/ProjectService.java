@@ -62,7 +62,7 @@ public class ProjectService {
         if (!existingProject.getUser().id.equals(userId)) {
             throw new ForbiddenException("Forbidden");
         }
-        Project updated = projectRepository.update(existingProject,request, userId);
+        Project updated = projectRepository.update(existingProject,request);
         return updated.toDTO();
     }
 
