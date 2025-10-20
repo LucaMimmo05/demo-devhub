@@ -9,16 +9,18 @@ public class CommandResponse {
     public String description;
     public LocalDateTime createdAt;
     public UserSummary user;
+    public String example;
 
     public CommandResponse() {
     }
 
-    public CommandResponse(String title, String commandText, String description, LocalDateTime createdAt, UserSummary user) {
+    public CommandResponse(String title, String commandText, String description, LocalDateTime createdAt, UserSummary user, String example) {
         this.title = title;
         this.commandText = commandText;
         this.description = description;
         this.createdAt = createdAt;
         this.user = user;
+        this.example = example;
     }
 
     public String getTitle() {
@@ -59,6 +61,14 @@ public class CommandResponse {
 
     public void setUser(UserSummary user) {
         this.user = user;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
     }
 
     public static class UserSummary {

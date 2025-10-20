@@ -6,12 +6,15 @@ public class CommandRequest {
     public String title;
     public String commandText;
     public String description;
+    public String example;
 
 
-    public CommandRequest(String title, String commandText, String description) {
+
+    public CommandRequest(String title, String commandText, String description, String example) {
         this.title = title;
         this.commandText = commandText;
         this.description = description;
+        this.example = example;
     }
 
     public CommandRequest() {
@@ -40,5 +43,13 @@ public class CommandRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getExample() {
+        return example;
+    }
+
+    public void setExample(String example) {
+        this.example = example;
     }
 }

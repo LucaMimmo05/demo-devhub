@@ -31,6 +31,7 @@ public class CommandRepository {
         command.setDescription(request.getDescription());
         command.setCreatedAt(LocalDateTime.now());
         command.setUser(user);
+        command.setExample(request.getExample());
 
         command.persistAndFlush();
         return command;
@@ -46,6 +47,9 @@ public class CommandRepository {
         }
         if (request.getDescription() != null) {
             command.setDescription(request.getDescription());
+        }
+        if (request.getExample() != null) {
+            command.setExample(request.getExample());
         }
         Command managed = Command.getEntityManager().merge(command);
         Command.getEntityManager().flush();
