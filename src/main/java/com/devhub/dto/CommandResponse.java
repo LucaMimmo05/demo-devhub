@@ -3,7 +3,7 @@ package com.devhub.dto;
 import java.time.LocalDateTime;
 
 public class CommandResponse {
-
+    public Long id;
     public String title;
     public String commandText;
     public String description;
@@ -14,7 +14,8 @@ public class CommandResponse {
     public CommandResponse() {
     }
 
-    public CommandResponse(String title, String commandText, String description, LocalDateTime createdAt, UserSummary user, String example) {
+    public CommandResponse(String title, String commandText, String description, LocalDateTime createdAt, UserSummary user, String example, Long id) {
+        this.id = id;
         this.title = title;
         this.commandText = commandText;
         this.description = description;
@@ -22,7 +23,12 @@ public class CommandResponse {
         this.user = user;
         this.example = example;
     }
-
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getTitle() {
         return title;
     }

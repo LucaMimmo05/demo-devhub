@@ -74,6 +74,7 @@ public class Command extends PanacheEntity {
         cr.setDescription(this.description);
         cr.setExample(this.example);
         cr.setCreatedAt(this.createdAt);
+        cr.setId(this.id);
 
         if (Objects.nonNull(this.user)) {
             CommandResponse.UserSummary us = new CommandResponse.UserSummary();
