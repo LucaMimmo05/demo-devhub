@@ -1,18 +1,14 @@
 package com.devhub.services;
 
-import com.devhub.dto.LoginRequest;
-import com.devhub.dto.LoginResponse;
-import com.devhub.dto.RegisterRequest;
-import com.devhub.dto.UserResponse;
+import com.devhub.dto.*;
 import com.devhub.models.User;
 import com.devhub.models.role.Role;
 import com.devhub.repositories.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
-import org.eclipse.microprofile.jwt.JsonWebToken;
+import com.devhub.exception.BadRequestException;
+import com.devhub.exception.NotFoundException;
+import com.devhub.exception.UnauthorizedException;
 import org.mindrot.jbcrypt.BCrypt;
 
 @ApplicationScoped
@@ -39,12 +35,12 @@ public class UserService {
         User user = findUser(request.getEmail());
 
         if (user == null) {
-            throw new WebApplicationException("Invalid Credentials", 401);
+            throw new UnauthorizedException("Invalid Credentials");
         }
 
 
         if (!checkPassword(request.getPassword(), user.getPassword())) {
-            throw new WebApplicationException("Invalid Credentials", 401);
+            throw new UnauthorizedException("Invalid Credentials");
         }
 
         UserResponse userResponse = createResponse(user);
@@ -107,6 +103,30 @@ public class UserService {
         return newUser;
     }
 
+    public UserResponse updateUser(Long id, UserRequest request) {
+        User user = userRepository.getUserById(id);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+            String hashedPassword = hashPassword(request.getPassword());
+            request.setPassword(hashedPassword);
+        }
+
+        User updatedUser = userRepository.update(user, request);
+        return createResponse(updatedUser);
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.getUserById(id);
+        if (user == null) {
+            throw new NotFoundException("User not found");
+        }
+        userRepository.deleteUser(id);
+    }
+
+
     private UserResponse createResponse(User user) {
         return new UserResponse(
                 user.id,
@@ -119,35 +139,17 @@ public class UserService {
 
     public LoginResponse refreshTokens(String refreshToken) {
         if (refreshToken == null) {
-            throw new WebApplicationException("Refresh token is required", 400);
+            throw new BadRequestException("Refresh token is required");
         }
 
-        // Verifica il refresh token e ottieni l'utente
         LoginResponse loginResponse = jwtService.verifyToken(refreshToken, "refresh-token");
         UserResponse userResponse = loginResponse.getUser();
 
-        // Genera nuovi token
         String newAccessToken = jwtService.generateAccessToken(userResponse);
         String newRefreshToken = jwtService.generateRefreshToken(userResponse);
 
         return new LoginResponse("Token refreshed", newAccessToken, newRefreshToken, userResponse);
     }
 
-
-    public UserResponse getUserById(Long userId) {
-        User user = userRepository.findUserById(userId);
-        if (user == null) {
-            throw new NotFoundException("User not found");
-        }
-
-        // Conversione da User a UserResponse
-        return new UserResponse(
-                user.id,
-                user.getEmail(),
-                user.getName(),
-                user.getSurname(),
-                user.getRole()
-        );
-    }
 
 }
