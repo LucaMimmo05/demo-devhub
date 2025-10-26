@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -19,9 +20,14 @@ import java.util.Map;
 @Path("/github")
 public class GitHubOAuthController {
 
-    private static final String CLIENT_ID = "Ov23lirRBjYVmRZbBf4G";
-    private static final String CLIENT_SECRET = "dffc4218513be65cc8ad3f59dda9989076db8438";
-    private static final String REDIRECT_URI = "http://localhost:5173/github/callback";
+    @ConfigProperty(name = "github.client.id")
+    private String CLIENT_ID;
+
+    @ConfigProperty(name = "github.client.secret")
+    private String CLIENT_SECRET;
+
+    @ConfigProperty(name = "github.redirect.uri")
+    private String REDIRECT_URI;
 
     @POST
     @Path("/callback")
