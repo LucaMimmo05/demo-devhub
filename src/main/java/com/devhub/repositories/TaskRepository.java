@@ -53,6 +53,16 @@ public class TaskRepository {
             task.setStatus(request.getStatus());
         }
 
+        if (request.getDescription() != null) {
+            task.setDescription(request.getDescription());
+        }
+        if (request.getPriority() != null) {
+            task.setPriority(request.getPriority());
+        }
+        if (request.getDueDate() != null) {
+            task.setDueDate(request.getDueDate());
+        }
+
         Task managed = Task.getEntityManager().merge(task);
         Task.getEntityManager().flush();
 
